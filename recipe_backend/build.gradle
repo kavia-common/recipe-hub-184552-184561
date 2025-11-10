@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.8'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'checkstyle'
 }
 
 group = 'com.example'
@@ -17,10 +18,26 @@ repositories {
 	mavenCentral()
 }
 
+checkstyle {
+	toolVersion = '10.12.1'
+	configFile = file('config/checkstyle/checkstyle.xml')
+	// Do not fail the build on warnings; only fail on errors
+	ignoreFailures = false
+}
+
+tasks.withType(Checkstyle).configureEach {
+	reports {
+		html.required = true
+		xml.required = false
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
